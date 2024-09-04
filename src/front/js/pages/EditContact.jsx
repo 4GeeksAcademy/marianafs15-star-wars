@@ -5,7 +5,7 @@ import { Context } from "../store/appContext.js";
 import rigoImageUrl from "../../img/rigo-baby.jpg";
 
 
-export const Single = props => {
+export const EditContact = props => {
 	const { store, actions } = useContext(Context);
 	const params = useParams();
 
@@ -22,9 +22,4 @@ export const Single = props => {
 			</Link>
 		</div>
 	);
-};
-
-
-Single.propTypes = {
-	match: PropTypes.object
 };
