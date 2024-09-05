@@ -4,9 +4,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 
     return {
         store: {
-            contacts: []
+            contacts: [],
+            currentContact: {},
         },
         actions: {
+            setCurrentContact: () => {
+
+            },
             getContact: async () => {
                 const uri = `${host}/agendas/${slug}/contacts`;
                 const options = {
@@ -56,10 +60,39 @@ const getState = ({ getStore, getActions, setStore }) => {
                 }
             },
             addContact: async () => {
-                const uri = `${host}/agendas/${slug}`;
+                const store = getStore();
+                const uri = `${host}/agendas/${slug}/contacts`;
                 const options = {
-                    method: 'POST'
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        full_name: store.user.full_name,
+                        email: store.user.email,
+                        agenda_slug: store.user.agenda_slug,
+                        address: store.user.address,
+                        phone: store.user.phone
+                    })
                 };
+
+                try {
+                    const response = await fetch(uri, options);
+
+                    if (!response.ok) {
+                        console.log(`Error: ${response.status} ${response.statusText}`);
+                        return;
+                    }
+
+                    const data = await response.json();
+                    console.log('Contact added successfully', data);
+
+                    // Actualiza la lista de contactos
+                    await getActions().getContact();
+
+                } catch (error) {
+                    console.error('Fetch error:', error);
+                }
             }
         }
     };

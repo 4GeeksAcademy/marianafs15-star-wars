@@ -1,7 +1,6 @@
 import React, { useContext, useState } from "react";
-import { Link } from "react-router-dom"; 
+import { Link, useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext.js";
-
 
 export const AddContact = () => {
   const { store, actions } = useContext(Context);
@@ -10,6 +9,7 @@ export const AddContact = () => {
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
   const [invalidItems, setInvalidItems] = useState([]);
+  const navigate = useNavigate();
 
   const validateFields = () => {
     const phoneRegex = /^[0-9]{10}$/;
@@ -53,7 +53,10 @@ export const AddContact = () => {
         setInvalidItems([]);
       }
     }
+    actions.addContact(dataToSend);
+    navigate("/contacts");
   };
+
 
   return (
     <div className="container pt-5">
@@ -88,7 +91,9 @@ export const AddContact = () => {
             onChange={(e) => setPhone(e.target.value)}
           />
           {invalidItems.includes("phone") && (
-            <p className="alert alert-danger">Please provide a valid phone number</p>
+            <p className="alert alert-danger">
+              Please provide a valid phone number
+            </p>
           )}
         </div>
         <div className="mb-3">
