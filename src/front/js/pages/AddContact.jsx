@@ -51,12 +51,10 @@ export const AddContact = () => {
         setEmail("");
         setAddress("");
         setInvalidItems([]);
+        navigate("/contact");
       }
     }
-    actions.addContact(dataToSend);
-    navigate("/contacts");
   };
-
 
   return (
     <div className="container pt-5">

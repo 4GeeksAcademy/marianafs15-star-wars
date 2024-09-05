@@ -8,10 +8,8 @@ const getState = ({ getStore, getActions, setStore }) => {
             currentContact: {},
         },
         actions: {
-            setCurrentContact: () => {
-
-            },
-            getContact: async () => {
+            setCurrentContact: (contact) => { setStore({currentContact: contact})      },
+            getContact: async () => { 
                 const uri = `${host}/agendas/${slug}/contacts`;
                 const options = {
                     method: 'GET'
@@ -59,7 +57,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                     console.error('Fetch error:', error);
                 }
             },
-            addContact: async () => {
+            addContact: async (newContact) => {
                 const store = getStore();
                 const uri = `${host}/agendas/${slug}/contacts`;
                 const options = {
@@ -68,11 +66,10 @@ const getState = ({ getStore, getActions, setStore }) => {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        full_name: store.user.full_name,
-                        email: store.user.email,
-                        agenda_slug: store.user.agenda_slug,
-                        address: store.user.address,
-                        phone: store.user.phone
+                        name: newContact.name,
+                        email: newContact.email,
+                        address: newContact.address,
+                        phone: newContact.phone
                     })
                 };
 
@@ -81,15 +78,49 @@ const getState = ({ getStore, getActions, setStore }) => {
 
                     if (!response.ok) {
                         console.log(`Error: ${response.status} ${response.statusText}`);
-                        return;
+                        return false;
                     }
 
                     const data = await response.json();
                     console.log('Contact added successfully', data);
 
                     // Actualiza la lista de contactos
-                    await getActions().getContact();
+                    getActions().getContact();
+                    return true
+                } catch (error) {
+                    console.error('Fetch error:', error);
+                }
+            },
+            editContact: async (contact) => {
+                const store = getStore();
+                const uri = `${host}/agendas/${slug}/contacts`;
+                const options = {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: contact.name,
+                        email: contact.email,
+                        address: contact.address,
+                        phone: contact.phone
+                    })
+                };
 
+                try {
+                    const response = await fetch(uri, options);
+
+                    if (!response.ok) {
+                        console.log(`Error: ${response.status} ${response.statusText}`);
+                        return false;
+                    }
+
+                    const data = await response.json();
+                    console.log('Contact edited successfully', data);
+
+                    // Actualiza la lista de contactos
+                    getActions().getContact();
+                    return true
                 } catch (error) {
                     console.error('Fetch error:', error);
                 }
