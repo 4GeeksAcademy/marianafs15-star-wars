@@ -8,8 +8,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             currentContact: {},
         },
         actions: {
-            setCurrentContact: (contact) => { setStore({currentContact: contact})      },
-            getContact: async () => { 
+            getContact: async () => {
                 const uri = `${host}/agendas/${slug}/contacts`;
                 const options = {
                     method: 'GET'
@@ -93,7 +92,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             },
             editContact: async (contact) => {
                 const store = getStore();
-                const uri = `${host}/agendas/${slug}/contacts`;
+                const uri = `${host}/agendas/${slug}/contacts/${contact.id}`;
                 const options = {
                     method: 'PUT',
                     headers: {
@@ -117,6 +116,30 @@ const getState = ({ getStore, getActions, setStore }) => {
 
                     const data = await response.json();
                     console.log('Contact edited successfully', data);
+
+                    // Actualiza la lista de contactos
+                    getActions().getContact();
+                    return true
+                } catch (error) {
+                    console.error('Fetch error:', error);
+                }
+            },
+            deleteContact:async(id)=>{
+                const store = getStore();
+                const uri = `${host}/agendas/${slug}/contacts/${id}`;
+                const options = {
+                    method: 'DELETE',
+                };
+
+                try {
+                    const response = await fetch(uri, options);
+
+                    if (!response.ok) {
+                        console.log(`Error: ${response.status} ${response.statusText}`);
+                        return false;
+                    }
+
+                    console.log('Contact deleted successfully');
 
                     // Actualiza la lista de contactos
                     getActions().getContact();

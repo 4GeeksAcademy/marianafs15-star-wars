@@ -3,14 +3,14 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext.js";
 
 
-export const EditContact = props => {
+export const EditContact = () => {
 	const { store, actions } = useContext(Context);
 	const params = useParams();
 	const [contact, setContact] = useState(null)
 	const [invalidItems, setInvalidItems] = useState([]);
 	const navigate = useNavigate();
 	useEffect(() => {
-	setContact(store.contacts.find(item => item.id == params.id))
+		setContact(store.contacts.find(item => item.id == params.theid))
 	}, [])
 
 
@@ -22,10 +22,10 @@ export const EditContact = props => {
 		if (contact.name.trim() === "") {
 			errors.push("name");
 		}
-		if (contact.phone.trim() === "" || !phoneRegex.test(phone)) {
+		if (contact.phone.trim() === "" || !phoneRegex.test(contact.phone)) {
 			errors.push("phone");
 		}
-		if (contact.email.trim() === "" || !emailRegex.test(email)) {
+		if (contact.email.trim() === "" || !emailRegex.test(contact.email)) {
 			errors.push("email");
 		}
 		if (contact.address.trim() === "") {
@@ -50,8 +50,9 @@ export const EditContact = props => {
 	};
 	return (
 		<div className="container pt-5">
+			<button onClick={() => console.log(store)}>click here</button>
 			<form onSubmit={handleSubmit}>
-				<h1 className="text-center">Add a new contact</h1>
+				<h1 className="text-center">Edit contact</h1>
 				<div className="mb-3">
 					<label htmlFor="formGroupExampleInput" className="form-label">
 						Full Name
@@ -61,8 +62,8 @@ export const EditContact = props => {
 						className="form-control"
 						id="formGroupExampleInput"
 						placeholder="John Doe/Jane Doe"
-						value={contact?.name} 
-						onChange={(e) => setContact({...contact,name:e.target.value})}
+						value={contact?.name}
+						onChange={(e) => setContact({ ...contact, name: e.target.value })}
 					/>
 					{invalidItems.includes("name") && (
 						<p className="alert alert-danger">Please provide a valid name</p>
@@ -78,7 +79,7 @@ export const EditContact = props => {
 						id="formGroupExampleInput2"
 						placeholder="000-000-0000"
 						value={contact?.phone}
-						onChange={(e) => setContact({...contact,phone:e.target.value})}
+						onChange={(e) => setContact({ ...contact, phone: e.target.value })}
 					/>
 					{invalidItems.includes("phone") && (
 						<p className="alert alert-danger">
@@ -96,7 +97,7 @@ export const EditContact = props => {
 						id="formGroupExampleInput2"
 						placeholder="xxxx@domain.com"
 						value={contact?.email}
-						onChange={(e) => setContact({...contact,email:e.target.value})}
+						onChange={(e) => setContact({ ...contact, email: e.target.value })}
 					/>
 					{invalidItems.includes("email") && (
 						<p className="alert alert-danger">Please provide a valid email</p>
@@ -112,7 +113,7 @@ export const EditContact = props => {
 						id="formGroupExampleInput2"
 						placeholder="Address"
 						value={contact?.address}
-						onChange={(e) => setContact({...contact,address:e.target.value})}
+						onChange={(e) => setContact({ ...contact, address: e.target.value })}
 					/>
 					{invalidItems.includes("address") && (
 						<p className="alert alert-danger">Please provide a valid address</p>
