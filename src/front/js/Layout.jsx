@@ -10,6 +10,8 @@ import { AddContact } from "./pages/AddContact.jsx";
 import { EditContact } from "./pages/EditContact.jsx";
 import { Contact } from "./pages/Contact.jsx";
 import { Navbar } from "./component/Navbar.jsx";
+import { Characters } from "./pages/Characters.jsx";
+
 
 
 // Create your first component
@@ -25,12 +27,13 @@ const Layout = () => {
             <BrowserRouter basename={basename}>
                 <ScrollToTop>
                     <Navbar />
-                    <Routes>
+                     <Routes>
                         <Route element={<Home />} path="/" />
                         <Route element={<AddContact />} path="/add-contact" />
                         <Route element={<Contact />} path="/contact" />
                         <Route element={<EditContact />} path="/edit-contact/:theid" />
-                        <Route element={<h1>Not found!</h1>} path="*" />
+                        <Route element={<Characters/>} path="/characters" />
+                        <Route element={<h1>Not found!</h1>} path="*" />  
                     </Routes>
                 </ScrollToTop>
             </BrowserRouter>
