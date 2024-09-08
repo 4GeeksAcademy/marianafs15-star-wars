@@ -155,6 +155,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                     return
                 }
                 const data = await response.json();
+                setStore({characters: data.results} );
             },
         }
     };
