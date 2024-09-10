@@ -7,8 +7,13 @@ const getState = ({ getStore, getActions, setStore }) => {
             contacts: [],
             currentContact: {},
             characters : [],
+            currentCharacter: {},
+            currentPlanet : {},
+            planets : [],
+
         },
         actions: {
+            setCurrentCharacter: (value) => {setStore({currentCharacter : value})},
             getContact: async () => {
                 const uri = `${host}/agendas/${slug}/contacts`;
                 const options = {
@@ -157,6 +162,26 @@ const getState = ({ getStore, getActions, setStore }) => {
                 const data = await response.json();
                 setStore({characters: data.results} );
             },
+            getCharacterDetails: async (id) => {
+				const response = await fetch(`https://www.swapi.tech/api/people/${id}`);
+				if (!response.ok) { return };
+				const data = await response.json()
+				setStore( { currentCharacter: data.result.properties} )
+			},
+            getPlanets: async () => {
+                const response = await fetch('https://www.swapi.tech/api/people')
+                if (!response.ok){
+                    return
+                }
+                const data = await response.json();
+                setStore({characters: data.results} );
+            },
+            getPlanetDetails: async (id) => {
+				const response = await fetch(`https://www.swapi.tech/api/planet/${id}`);
+				if (!response.ok) { return };
+				const data = await response.json()
+				setStore( { currentPlanet: data.result.properties} )
+			},
         }
     };
 };

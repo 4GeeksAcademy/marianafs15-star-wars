@@ -10,8 +10,9 @@ import { AddContact } from "./pages/AddContact.jsx";
 import { EditContact } from "./pages/EditContact.jsx";
 import { Contact } from "./pages/Contact.jsx";
 import { Navbar } from "./component/Navbar.jsx";
-import { Characters } from "./pages/Characters.jsx";
+import { DataRow } from "./component/DataRow.jsx";
 import { DetailCharacters } from "./pages/DetailCharacters.jsx";
+
 
 
 
@@ -33,7 +34,8 @@ const Layout = () => {
                         <Route element={<AddContact />} path="/add-contact" />
                         <Route element={<Contact />} path="/contact" />
                         <Route element={<EditContact />} path="/edit-contact/:theid" />
-                        <Route element={<Characters/>} path="/characters" />
+                        <Route element={<DataRow category="characters"/>} path="/characters" />
+                        <Route element={<DataRow category="planets"/>} path="/planets" />
                         <Route element={<DetailCharacters/>} path="/characters/:uid" />
                         <Route element={<h1>Not found!</h1>} path="*" />  
                     </Routes>
