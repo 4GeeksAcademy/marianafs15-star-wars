@@ -10,11 +10,22 @@ const getState = ({ getStore, getActions, setStore }) => {
       currentCharacter: {},
       currentPlanet: {},
       planets: [],
+      favorites :  []
     },
     actions: {
       setCurrentCharacter: (value) => {
         setStore({ currentCharacter: value });
+        
       },
+      addFavorites : (newFavorite) => {
+        //verificar si el favorito esta cargado
+        setStore({ favorites: [...getStore().favorites,newFavorite ]})
+      },
+        removeFavorites: (noFavorite) => {
+          const resultado = getStore().favorites.filter((item) => item.name !== noFavorite)
+          setStore({ favorites: resultado})
+        },
+
       getContact: async () => {
         const uri = `${host}/agendas/${slug}/contacts`;
         const options = {

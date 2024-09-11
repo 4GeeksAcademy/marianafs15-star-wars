@@ -3,13 +3,20 @@ import { Context } from "../store/appContext.js";
 import { Link } from "react-router-dom";
 
 export const DataRow = ({ category }) => {
-  const { store } = useContext(Context);
+  const { store, actions } = useContext(Context);
   const backupSource =
     "https://starwars-visualguide.com/assets/img/placeholder.jpg";
 
   const handleError = (event) => {
     event.target.src = backupSource;
   };
+  const handleFavorite = (element) => {
+   const newFavorite = {
+    name : element.name,
+    type: 'character'
+   }
+   actions.addFavorites(newFavorite);
+  }
 
   return (
     <div className="container my-3 bg-dark">
@@ -37,8 +44,10 @@ export const DataRow = ({ category }) => {
                   <Link to={`/characters/${item.uid}`} className="btn btn-dark">
                     Detalles
                   </Link>
-                  <i className="far fa-heart fa-3x text-danger"></i>
+                  <span onClick={() => handleFavorite(item)}>
+
                   <i className="fas fa-heart fa-3x text-danger"></i>
+                  </span>
                 </div>
               </div>
             </div>
