@@ -13,12 +13,12 @@ export const BtnFavorites = () => {
     <div className="dropdown">
       <button className="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         Favorites
-        <span className="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-danger">
+        <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
           {store.favorites.length}
           <span className="visually-hidden">unread messages</span>
         </span>
       </button>
-      <ul className="dropdown-menu">
+      <ul className="dropdown-menu dropdown-menu-end">
         {store.favorites.map((item, index) =>
           <li key={index} className="dropdown-item d-flex justify-content-between">
             {item.name} - {item.type}

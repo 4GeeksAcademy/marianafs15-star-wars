@@ -18,13 +18,13 @@ export const DetailCharacters = () => {
                  <Spinner />
                 :
                 <div className="col">
-                    <div class="card mb-3">
-                        <div class="row g-0">
-                            <div class="col-md-4">
-                                <img src="..." class="img-fluid rounded-start" alt="..." />
+                    <div className="card mb-3">
+                        <div className="row g-0">
+                            <div className="col-md-4">
+                                <img src={`https://starwars-visualguide.com/assets/img/characters/${params.uid}.jpg`} className="img-fluid rounded-start" alt="..." />
                             </div>
-                            <div class="col-md-8">
-                                <div class="card-body">
+                            <div className="col-md-8">
+                                <div className="card-body">
                                     <p>Height: {store.currentCharacter.height}</p>
                                     <p>Mass: {store.currentCharacter.mass}</p>
                                     <p>Hair color: {store.currentCharacter.hair_color}</p>

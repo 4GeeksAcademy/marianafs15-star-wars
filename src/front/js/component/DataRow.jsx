@@ -41,7 +41,7 @@ export const DataRow = ({ category }) => {
               <div className="card-body">
                 <h5 className="card-title">{item.name}</h5>
                 <div className="d-flex justify-content-between">
-                  <Link to={`/characters/${item.uid}`} className="btn btn-dark">
+                  <Link to={`/${category}/${item.uid}`} className="btn btn-dark">
                     Detalles
                   </Link>
                   <span onClick={() => handleFavorite(item)}>

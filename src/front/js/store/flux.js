@@ -7,25 +7,50 @@ const getState = ({ getStore, getActions, setStore }) => {
       contacts: [],
       currentContact: {},
       characters: [],
-      currentCharacter: {},
-      currentPlanet: {},
       planets: [],
-      favorites :  []
+      starships : [],
+      currentCharacter: {},
+      currentPlanet: {},  
+      currentStarShip: {},
+      favorites: []
     },
     actions: {
       setCurrentCharacter: (value) => {
         setStore({ currentCharacter: value });
-        
       },
-      addFavorites : (newFavorite) => {
-        //verificar si el favorito esta cargado
-        setStore({ favorites: [...getStore().favorites,newFavorite ]})
-      },
-        removeFavorites: (noFavorite) => {
-          const resultado = getStore().favorites.filter((item) => item.name !== noFavorite)
-          setStore({ favorites: resultado})
-        },
+      getStarShipDetails: async (id) => {  
+        try {
+          const response = await fetch(`https://www.swapi.tech/api/starships/${id}`);
+          if (!response.ok) throw new Error("Error fetching starship data");
 
+          const data = await response.json();
+          setStore({ currentStarShip: data.result.properties });
+        } catch (error) {
+          console.error("Error fetching starship details:", error);
+        }
+      },
+      getPlanetDetails: async (id) => {
+        try {
+          const response = await fetch(`https://www.swapi.tech/api/planets/${id}`);
+          if (!response.ok) throw new Error("Error fetching planet data");
+
+          const data = await response.json();
+          setStore({ currentPlanet: data.result.properties });
+        } catch (error) {
+          console.error("Error fetching planet details:", error);
+        }
+      },
+      addFavorites: (newFavorite) => {
+        const store = getStore();
+        if (!store.favorites.find(item => item.name === newFavorite.name)) {
+          setStore({ favorites: [...store.favorites, newFavorite] });
+        }
+      },
+      removeFavorites: (noFavorite) => {
+        const store = getStore();
+        const filteredFavorites = store.favorites.filter(item => item.name !== noFavorite);
+        setStore({ favorites: filteredFavorites });
+      },
       getContact: async () => {
         const uri = `${host}/agendas/${slug}/contacts`;
         const options = {
@@ -36,15 +61,13 @@ const getState = ({ getStore, getActions, setStore }) => {
           const response = await fetch(uri, options);
 
           if (response.status === 404) {
-            console.log(`Error: ${response.status} ${response.statusText}`);
-            console.log("Creating new agenda");
+            console.log("Agenda not found, creating a new one");
             await getActions().createAgenda();
           } else if (response.status === 200) {
             const data = await response.json();
-            console.log(data.contacts);
             setStore({ contacts: data.contacts });
           } else {
-            console.log(`Error: ${response.status} ${response.statusText}`);
+            console.log(`Error: ${response.status}`);
           }
         } catch (error) {
           console.error("Fetch error:", error);
@@ -59,88 +82,59 @@ const getState = ({ getStore, getActions, setStore }) => {
         try {
           const response = await fetch(uri, options);
 
-          if (!response.ok) {
-            console.log(`Error: ${response.status} ${response.statusText}`);
-            return;
+          if (response.ok) {
+            console.log("Agenda created, fetching contacts...");
+            await getActions().getContact();
+          } else {
+            console.log(`Error: ${response.status}`);
           }
-
-          const data = await response.json();
-          console.log("New agenda successfully created, getting contacts");
-          await getActions().getContact();
         } catch (error) {
           console.error("Fetch error:", error);
         }
       },
       addContact: async (newContact) => {
-        const store = getStore();
         const uri = `${host}/agendas/${slug}/contacts`;
         const options = {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            name: newContact.name,
-            email: newContact.email,
-            address: newContact.address,
-            phone: newContact.phone,
-          }),
+          body: JSON.stringify(newContact),
         };
 
         try {
           const response = await fetch(uri, options);
-
-          if (!response.ok) {
-            console.log(`Error: ${response.status} ${response.statusText}`);
-            return false;
+          if (response.ok) {
+            await getActions().getContact();
+          } else {
+            console.log(`Error: ${response.status}`);
           }
-
-          const data = await response.json();
-          console.log("Contact added successfully", data);
-
-          // Actualiza la lista de contactos
-          getActions().getContact();
-          return true;
         } catch (error) {
           console.error("Fetch error:", error);
         }
       },
       editContact: async (contact) => {
-        const store = getStore();
         const uri = `${host}/agendas/${slug}/contacts/${contact.id}`;
         const options = {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            name: contact.name,
-            email: contact.email,
-            address: contact.address,
-            phone: contact.phone,
-          }),
+          body: JSON.stringify(contact),
         };
 
         try {
           const response = await fetch(uri, options);
-
-          if (!response.ok) {
-            console.log(`Error: ${response.status} ${response.statusText}`);
-            return false;
+          if (response.ok) {
+            await getActions().getContact();
+          } else {
+            console.log(`Error: ${response.status}`);
           }
-
-          const data = await response.json();
-          console.log("Contact edited successfully", data);
-
-          // Actualiza la lista de contactos
-          getActions().getContact();
-          return true;
         } catch (error) {
           console.error("Fetch error:", error);
         }
       },
       deleteContact: async (id) => {
-        const store = getStore();
         const uri = `${host}/agendas/${slug}/contacts/${id}`;
         const options = {
           method: "DELETE",
@@ -148,53 +142,59 @@ const getState = ({ getStore, getActions, setStore }) => {
 
         try {
           const response = await fetch(uri, options);
-
-          if (!response.ok) {
-            console.log(`Error: ${response.status} ${response.statusText}`);
-            return false;
+          if (response.ok) {
+            await getActions().getContact();
+          } else {
+            console.log(`Error: ${response.status}`);
           }
-
-          console.log("Contact deleted successfully");
-
-          // Actualiza la lista de contactos
-          getActions().getContact();
-          return true;
         } catch (error) {
           console.error("Fetch error:", error);
         }
       },
       getCharacters: async () => {
-        const response = await fetch("https://www.swapi.tech/api/people");
-        if (!response.ok) {
-          return;
+        try {
+          const response = await fetch("https://www.swapi.tech/api/people");
+          if (response.ok) {
+            const data = await response.json();
+            setStore({ characters: data.results });
+          }
+        } catch (error) {
+          console.error("Error fetching characters:", error);
         }
-        const data = await response.json();
-        setStore({ characters: data.results });
       },
       getCharacterDetails: async (id) => {
-        const response = await fetch(`https://www.swapi.tech/api/people/${id}`);
-        if (!response.ok) {
-          return;
+        try {
+          const response = await fetch(`https://www.swapi.tech/api/people/${id}`);
+          if (response.ok) {
+            const data = await response.json();
+            setStore({ currentCharacter: data.result.properties });
+          }
+        } catch (error) {
+          console.error("Error fetching character details:", error);
         }
-        const data = await response.json();
-        setStore({ currentCharacter: data.result.properties });
       },
       getPlanets: async () => {
-        const response = await fetch("https://www.swapi.tech/api/planets");
-        if (!response.ok) {
-          return;
+        try {
+          const response = await fetch("https://www.swapi.tech/api/planets");
+          if (response.ok) {
+            const data = await response.json();
+            setStore({ planets: data.results });
+          }
+        } catch (error) {
+          console.error("Error fetching planets:", error);
         }
-        const data = await response.json();
-        setStore({ planets: data.results });
       },
-      getPlanetDetails: async (id) => {
-        const response = await fetch(`https://www.swapi.tech/api/planet/${id}`);
-        if (!response.ok) {
-          return;
+      getStarships: async () => {
+        try {
+            const response = await fetch("https://www.swapi.tech/api/starships");
+            if (response.ok) {
+                const data = await response.json();
+                setStore({ starships: data.results });
+            }
+        } catch (error) {
+            console.error("Error fetching starships:", error);
         }
-        const data = await response.json();
-        setStore({ currentPlanet: data.result.properties });
-      },
+    }    
     },
   };
 };

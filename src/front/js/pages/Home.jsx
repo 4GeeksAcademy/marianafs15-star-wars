@@ -10,9 +10,6 @@ export const Home = () => {
     return (
         <div className="container">
             <h1 className="text-center">Home</h1>
-
-            <DataRow category="characters"/> 
-            <DataRow category="planets"/> 
         </div>
 
 

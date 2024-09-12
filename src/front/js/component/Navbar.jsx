@@ -4,21 +4,28 @@ import { BtnFavorites } from "./BtnFavorites.jsx";
 
 
 export const Navbar = () => {
-	
+
 	return (
 		<nav className="navbar navbar-light bg-light">
-			<div className="container">
+			<div className="container d-flex justify-content-between">
 				<Link to="/">
 					<span className="navbar-brand mb-0 h1">Home</span>
 				</Link>
-				<div className="ml-auto">
+				<div className="ms-auto d-flex">
 					<Link to="/characters">
 						<button className="btn btn-dark">Characters</button>
 					</Link>
-					<Link to="/contact">
+					<Link to="/planets" className="ms-2"> 
+						<button className="btn btn-dark">Planets</button>
+					</Link>
+
+					<Link to="/starships" className="ms-2">
+						<button className="btn btn-dark">StarShips</button>
+					</Link>
+					<Link to="/contact" className="ms-2">
 						<button className="btn btn-dark">Contact</button>
 					</Link>
-					<BtnFavorites/>
+					<BtnFavorites />
 				</div>
 			</div>
 		</nav>
