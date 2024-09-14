@@ -46,7 +46,7 @@ export const DataRow = ({ category }) => {
                   </Link>
                   <span onClick={() => handleFavorite(item)}>
 
-                  <i className="fas fa-heart fa-3x text-danger"></i>
+                  <i className="fas fa-heart fa-2x text-danger"></i>
                   </span>
                 </div>
               </div>

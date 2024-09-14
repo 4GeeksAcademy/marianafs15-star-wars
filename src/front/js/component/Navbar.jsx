@@ -22,7 +22,7 @@ export const Navbar = () => {
 					<Link to="/starships" className="ms-2">
 						<button className="btn btn-dark">StarShips</button>
 					</Link>
-					<Link to="/contact" className="ms-2">
+					<Link to="/contact" className="mx-2">
 						<button className="btn btn-dark">Contact</button>
 					</Link>
 					<BtnFavorites />
