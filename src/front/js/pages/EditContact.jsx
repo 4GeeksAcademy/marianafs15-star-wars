@@ -122,7 +122,7 @@ export const EditContact = () => {
 					<button type="submit" className="btn btn-primary">
 						Save
 					</button>
-					<Link to="/" className="btn btn-secondary">
+					<Link to="/contact" className="btn btn-secondary">
 						Go Back
 					</Link>
 				</div>
