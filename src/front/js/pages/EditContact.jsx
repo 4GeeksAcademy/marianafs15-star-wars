@@ -50,7 +50,6 @@ export const EditContact = () => {
 	};
 	return (
 		<div className="container pt-5">
-			<button onClick={() => console.log(store)}>click here</button>
 			<form onSubmit={handleSubmit}>
 				<h1 className="text-center">Edit contact</h1>
 				<div className="mb-3">
@@ -123,7 +122,7 @@ export const EditContact = () => {
 					<button type="submit" className="btn btn-primary">
 						Save
 					</button>
-					<Link to="/" className="btn btn-secondary">
+					<Link to="/contact" className="btn btn-secondary">
 						Go Back
 					</Link>
 				</div>
