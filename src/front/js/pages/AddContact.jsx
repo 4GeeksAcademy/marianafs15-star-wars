@@ -90,7 +90,7 @@ export const AddContact = () => {
           />
           {invalidItems.includes("phone") && (
             <p className="alert alert-danger">
-              Please provide a valid phone number
+              Please provide a valid phone number, you have providet 10 numbers
             </p>
           )}
         </div>
@@ -130,7 +130,7 @@ export const AddContact = () => {
           <button type="submit" className="btn btn-primary">
             Save
           </button>
-          <Link to="/" className="btn btn-secondary">
+          <Link to="/contact" className="btn btn-secondary">
             Go Back
           </Link>
         </div>
