@@ -14,6 +14,13 @@ api = Blueprint('api', __name__)
 CORS(api)  # Allow CORS requests to this API
 
 
+@api.route('/hello', methods=['GET'])
+def handle_hello():
+    response_body = {}
+    response_body['message'] = "Hello! I'm a message that came from the backend, check the network tab on the google inspector and you will see the GET request"
+    return response_body, 200
+
+
 @api.route('/authors', methods=['GET', 'POST'])
 def authors():
     response_body = {}
@@ -113,4 +120,8 @@ def author(id):
         db.session.commit()
         response_body['message'] = f'Mensaje desde el DELETE de {id}'
         response_body['results'] = {}
-        return response_body, 200
+        db.session.delete(row)
+        db.session.commit()
+        response_body['message'] = f'Mensaje desde el DELETE de {id}'
+        response_body['result'] = {}
+        return response_body, 200 
