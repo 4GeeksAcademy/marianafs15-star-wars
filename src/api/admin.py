@@ -12,3 +12,4 @@ def setup_admin(app):
     admin.add_view(ModelView(Authors, db.session))
     admin.add_view(ModelView(Books, db.session))
     admin.add_view(ModelView(Followers, db.session))
+   

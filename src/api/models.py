@@ -9,7 +9,7 @@ class Users(db.Model):
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
     is_admin = db.Column(db.Boolean(), unique=False, nullable=False)
     name = db.Column(db.String(), unique=False, nullable=True)
-    address = db.Column(db.String(), unique=False, nullable=True)
+    address =  db.Column(db.String(), unique=False, nullable=True)
     identification_type = db.Column(db.Enum('DNI', 'NIE', 'GC', name='identification_type'))
     identification_number = db.Column(db.Integer)
 
@@ -17,22 +17,21 @@ class Users(db.Model):
         return f'<User {self.email} - {self.name}>'
 
     def serialize(self):
-        return {
-            'id': self.id,
-            'email': self.email,
-            'is_active': self.is_active,
-            'is_admin': self.is_admin
-        }
-
-
+        # Do not serialize the password, its a security breach
+        return {'id': self.id,
+                'email': self.email,
+                'is_active': self.is_active,
+                'is_admin': self.is_admin}
+      
+  
 class Followers(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     follower_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     follower_to = db.relationship('Users', foreign_keys=[follower_id], backref=db.backref('follower_to', lazy='select'))
     following_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     following_to = db.relationship('Users', foreign_keys=[following_id], backref=db.backref('following_to', lazy='select'))
-
-
+    
+    
 class Authors(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(), unique=False, nullable=False)
@@ -44,12 +43,10 @@ class Authors(db.Model):
         return f'<Authors: {self.id} - {self.name}>'
 
     def serialize(self):
-        return {
-            'id': self.id,
-            'authors': self.name,
-            'country': self.country,
-            'books': [row.serialize() for row in self.book_to]
-        }
+        return {'id': self.id,
+                'authors': self.name,
+                'country': self.country,
+                'books': [row.serialize() for row in self.book_to]}
 
 
 class Books(db.Model):
@@ -62,10 +59,8 @@ class Books(db.Model):
         return f'<Books> {self.id} / {self.name}'
 
     def serialize(self):
-        return {
-            'id': self.id,
-            'book': self.name
-        }
+        return {'id': self.id,
+                'book': self.name}
 
 
 class Posts(db.Model):
